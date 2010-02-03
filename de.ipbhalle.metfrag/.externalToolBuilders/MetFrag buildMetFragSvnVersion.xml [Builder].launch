@@ -3,15 +3,15 @@
 <booleanAttribute key="editedByExternalToolsMainTab" value="true"/>
 <booleanAttribute key="org.eclipse.ant.ui.DEFAULT_VM_INSTALL" value="true"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/MetFrag/src/buildMetFragSvnVersion.xml"/>
+<listEntry value="/de.ipbhalle.metfrag"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
-<listEntry value="1"/>
+<listEntry value="4"/>
 </listAttribute>
 <booleanAttribute key="org.eclipse.debug.ui.ATTR_LAUNCH_IN_BACKGROUND" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.ant.ui.AntClasspathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="org.eclipse.ant.internal.ui.antsupport.InternalAntRunner"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="MetFrag"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="de.ipbhalle.metfrag"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.ant.ui.AntClasspathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_INSTALL_NAME" value="java-6-sun-1.6.0.12"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_INSTALL_TYPE_ID" value="org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType"/>

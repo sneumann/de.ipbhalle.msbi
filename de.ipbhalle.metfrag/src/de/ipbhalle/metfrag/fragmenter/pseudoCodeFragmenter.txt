@@ -1,0 +1,69 @@
+private List<IAtomContainer> splitMolecule(IAtomContainer atomContainer, IBond bond)
+{
+    List<IAtomContainer> ret = new ArrayList<IAtomContainer>();
+    //check if the given bond is contained in a ring
+    List<IRing> rings = this.allRings.getRings(bond);
+    // bond is in a ring....so we have to split up another bond to break it
+    if (rings.size() != 0 )
+    { 
+    	// only traverse one ring!!!! TODO....ist das richtig!? --> Test
+    	for (int i = 0; i < 1; i++) {
+    		Iterator<IBond> bondsInRing = rings.get(i).bonds();
+    		while (bondsInRing.hasNext())
+    		{
+    			IBond bondInRing = (IBond) bondsInRing.next();
+    			// if the bonds are identical: this wont split up the ring
+    			if(bondInRing == bond)
+    				continue;
+    			
+    			List<IAtomContainer> frags = new ArrayList<IAtomContainer>();
+            	
+            	while(atomsFromBond.hasNext())
+            	{
+            		IAtom currentAtom = atomsFromBond.next();
+                    frags.add(makeAtomContainer(currentAtom, bond));
+            	}
+    			
+            	// now maybe add the fragments to the list
+                for (int j = 0; j < frags.size(); j++) 
+                {	    	            
+	            	if(!isHeavyEnough(frags.get(i)))
+            			continue;
+	            	
+	            	// quick isomorphism check
+	            	if(isIdentical(frags.get(j)))
+    	            	continue;
+    	            
+	                ret.add(frags.get(j)); 
+                }
+    		}         		
+		}
+    }
+    else
+    {
+    	List<IAtomContainer> frags = new ArrayList<IAtomContainer>();
+    	
+    	Iterator<IAtom> atomsFromBond = bond.atoms();
+    	// get the atoms from the splitting bond --> create 2 fragments
+    	while(atomsFromBond.hasNext())
+    	{
+    		IAtom currentAtom = atomsFromBond.next();
+    		List<IBond> part = new ArrayList<IBond>();
+    		frags.add(makeAtomContainer(currentAtom, bond));
+    	}
+
+        // at most 2 new molecules
+        for (int i = 0; i < frags.size; i++) 
+        {
+    		// check the weight of the current fragment
+        	if(!isHeavyEnough(frags.get(i)))
+    			continue;
+    		// quick isomorphism check
+        	if(isIdentical(frags.get(i))
+            	continue;
+            
+            ret.add(frags.get(i));
+        } 
+     }
+    return ret;
+}

@@ -1,0 +1,42 @@
+public List<IAtomContainer> generateFragmentsStack(IAtomContainer originalMolecule) {
+	// done fragments
+	List<IAtomContainer> fragments = new ArrayList<IAtomContainer>();
+	// fragments not yet split up enough...QUEUE --> BFS
+	Vector<IAtomContainer> fragmentQueue = new Vector<IAtomContainer>();
+	// add original molecule to it
+	fragmentQueue.add(this.originalMolecule);
+
+	// do ring detection with the original molecule
+	AllRingsFinder allRingsFinder = new AllRingsFinder();
+
+	while (!fragmentQueue.isEmpty()) {
+		IAtomContainer currentFragment = fragmentQueue.firstElement();
+		// remove the first element from the queue
+		fragmentQueue.removeElementAt(0);
+		// get a list with all bonds to split on
+		List<IBond> splitableBonds = getSplitableBonds(currentFragment);
+
+		if (splitableBonds.size() == 0)
+			continue;
+
+		// loop over every "splitable bond"
+		for (IBond bond : splitableBonds) {
+			// split molecule on the specified bond
+			List<IAtomContainer> parts = splitMolecule(currentFragment,
+					bond);
+			// the fragments are returned
+			for (IAtomContainer partContainer : parts) {
+				fragmentQueue.add(partContainer);
+				// the finished fragments
+				fragments.add(partContainer);
+				// post process
+				List<IAtomContainer> modifiedParts = postProcess(partContainer);
+				for (IAtomContainer modifiedPart : modifiedParts) {
+					// add them to the done and undone fragments
+					fragmentQueue.add(modifiedPart);
+					fragments.add(containerSetParts.getAtomContainer(i));
+				}
+			}
+		}
+	}
+}

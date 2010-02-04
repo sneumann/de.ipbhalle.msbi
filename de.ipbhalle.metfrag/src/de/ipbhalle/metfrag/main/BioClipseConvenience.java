@@ -44,18 +44,15 @@ public class BioClipseConvenience {
 	
 	
 	private boolean sumFormulaRedundancyCheck = false;
-	private String database = "kegg";
+
 	private String sumFormula = "";
-	private int limit = 100;
 	private int mode = 1;
 	private double exactMass = 272.06847;
 
 
 	private double mzabs = 0.01;
 	private double mzppm = 50;
-	private double searchPPM = 10;
 	private int count = 0;
-	private int hitsDatabase = 0;
 	private String peaks = "119.051 467.616 45\n" +
 	   "123.044 370.662 36\n" +
 	   "147.044 6078.145 606\n" +
@@ -64,11 +61,7 @@ public class BioClipseConvenience {
 	   "189.058 176.358 16\n" +
 	   "273.076 10000.000 999\n" +
 	   "274.083 318.003 30\n";	
-	private String databaseID = "";
-	private List<IAtomContainer> molecules;
-	
-	
-	
+	private List<IAtomContainer> molecules;	
 	
 	/**
 	 * Instantiates a new database retrieval just for testing with the default values.
@@ -99,12 +92,11 @@ public class BioClipseConvenience {
 		this.molecules = molecules;
 		this.sumFormulaRedundancyCheck = sumFormulaRedundancyCheck;
 		this.sumFormula = sumFormula;
-		this.limit = limit;
 		this.mode = mode;
 		this.exactMass = exactMass;
 	}
-	
-	
+
+
 	/**
 	 * MetFrag convenience method!!!! :)
 	 * 
@@ -115,220 +107,122 @@ public class BioClipseConvenience {
 	 */
 	public List<Double> metFrag() throws Exception
 	{
-		
-		PubChemWebService pubchem = new PubChemWebService();
-		Vector<String> candidates = null;
-		
-		System.out.println("Search PPM: " + this.searchPPM);
-		
-		if(this.database.equals("kegg") && databaseID.equals(""))
-		{
-			if(this.sumFormula != "")
-				candidates = KeggWebservice.KEGGbySumFormula(this.sumFormula);
-			else
-				candidates = KeggWebservice.KEGGbyMass(exactMass, (PPMTool.getPPM(exactMass, this.searchPPM)));
-		}
-		else if(this.database.equals("chemspider") && databaseID.equals(""))
-		{
-			if(this.sumFormula != "")
-				candidates = ChemSpider.getChemspiderBySumFormula(this.sumFormula);
-			else
-				candidates = ChemSpider.getChemspiderByMass(exactMass, (PPMTool.getPPM(exactMass, this.searchPPM)));
-		}
-		else if(this.database.equals("pubchem") && databaseID.equals(""))
-		{
-			if(this.sumFormula != "")
-				candidates = pubchem.getHitsbySumFormula(this.sumFormula);
-			else
-				candidates = pubchem.getHitsByMass(exactMass, (PPMTool.getPPM(exactMass, this.searchPPM)), this.limit);
-		}
-		else if (!databaseID.equals(""))
-		{
-			candidates = new Vector<String>();
-			candidates.add(databaseID);
-		}
-		
-		if(this.limit < this.hitsDatabase)
-			this.hitsDatabase = this.limit;
-		else
-			this.hitsDatabase = candidates.size();
-		
 
 		WrapperSpectrum spectrum = new WrapperSpectrum(this.peaks, mode, exactMass);
 		HashMap<Integer, ArrayList<String>> scoreMap = new HashMap<Integer, ArrayList<String>>();
 		HashMap<Double, Vector<String>> realScoreMap = new HashMap<Double, Vector<String>>();
-		
-		
-		this.hitsDatabase = candidates.size();
-		
-		count = 0;
-		
-		for (int c = 0; c < candidates.size(); c++) {
-			
-			Vector<Peak> listOfPeaks = new Vector<Peak>();
 
-	        //get mol file from kegg....remove "cpd:"
-			String candidateMol = "";
-			String candidateID = "";
-			IAtomContainer molecule = null;
-			
-			try
-			{
-				if(this.database.equals("kegg"))
-				{					
-					candidateMol = KeggWebservice.KEGGgetMol(candidates.get(c).substring(4), "/vol/data/pathways/kegg/mol/");
-					candidateID = candidates.get(c).substring(4);
-					MDLReader reader;
-					List<IAtomContainer> containersList;
-					
-			        reader = new MDLReader(new StringReader(candidateMol));
-			        ChemFile chemFile = (ChemFile)reader.read((ChemObject)new ChemFile());
-			        containersList = ChemFileManipulator.getAllAtomContainers(chemFile);
-			        molecule = containersList.get(0);
-					
-				}
-				else if(this.database.equals("chemspider"))
-				{
-					candidateMol = ChemSpider.getMolByID(candidates.get(c));
-					candidateID = candidates.get(c);
-					
-					MDLReader reader;
-					List<IAtomContainer> containersList;
-					
-			        reader = new MDLReader(new StringReader(candidateMol));
-			        ChemFile chemFile = (ChemFile)reader.read((ChemObject)new ChemFile());
-			        containersList = ChemFileManipulator.getAllAtomContainers(chemFile);
-			        molecule = containersList.get(0);
-			        
-				}
-				else if(this.database.equals("pubchem") && databaseID.equals(""))
-				{
-					candidateID = candidates.get(c);
-					molecule = pubchem.getMol(candidates.get(c));
-				}
-				else if(this.database.equals("pubchem") && !databaseID.equals(""))
-				{
-					candidateID = candidates.get(c);
-					molecule = pubchem.getMol(candidates.get(c));
-				}
-				else
-				{
-					System.err.println("ERROR: no database selected!!!!");
-				}
-			}
-			//some error in the molecule!?
-			catch(ArrayIndexOutOfBoundsException e)
-			{
-				System.out.println("Some error reading the molecule: " + candidateID + " (" + this.database + ")");
-				System.out.println("Error: " + e.getMessage());
-				e.printStackTrace();
-			}
-			
-			
+		count = 0;
+
+		for (int c = 0; c < molecules.size(); c++) {
+
+			Vector<Peak> listOfPeaks = new Vector<Peak>();
+			IAtomContainer molecule = molecules.get(c);
+
 			//skip if molecule is not connected
 			boolean isConnected = ConnectivityChecker.isConnected(molecule);
 			if(!isConnected)
 				continue;
-	        
-	        try
-	        {
-		        //add hydrogens
-		        CDKAtomTypeMatcher matcher = CDKAtomTypeMatcher.getInstance(molecule.getBuilder());
 
-		        for (IAtom atom : molecule.atoms()) {
-		          IAtomType type = matcher.findMatchingAtomType(molecule, atom);
-		          AtomTypeManipulator.configure(atom, type);
-		        }
-		        CDKHydrogenAdder hAdder = CDKHydrogenAdder.getInstance(molecule.getBuilder());
-		        hAdder.addImplicitHydrogens(molecule);
-		        AtomContainerManipulator.convertImplicitToExplicitHydrogens(molecule);
-	        }
-	        //there is a bug in cdk?? error happens when there is a S or Ti in the molecule
-	        catch(IllegalArgumentException e)
-            {
-	        	//skip it
-            	continue;
-            }
-	        
-	        
-	        //render original compound....thats the first picture in the list
+			try
+			{
+				//add hydrogens
+				CDKAtomTypeMatcher matcher = CDKAtomTypeMatcher.getInstance(molecule.getBuilder());
+
+				for (IAtom atom : molecule.atoms()) {
+					IAtomType type = matcher.findMatchingAtomType(molecule, atom);
+					AtomTypeManipulator.configure(atom, type);
+				}
+				CDKHydrogenAdder hAdder = CDKHydrogenAdder.getInstance(molecule.getBuilder());
+				hAdder.addImplicitHydrogens(molecule);
+				AtomContainerManipulator.convertImplicitToExplicitHydrogens(molecule);
+			}
+			//there is a bug in cdk?? error happens when there is a S or Ti in the molecule
+			catch(IllegalArgumentException e)
+			{
+				//skip it
+				continue;
+			}
+
+
+			//render original compound....thats the first picture in the list
 			int countTemp = 0;
 
-			
+
 			Double massDoubleOrig = MolecularFormulaTools.getMonoisotopicMass(MolecularFormulaManipulator.getMolecularFormula(molecule));
 			massDoubleOrig = (double)Math.round((massDoubleOrig)*10000)/10000;
 			String massOrig = massDoubleOrig.toString();
 			countTemp++;
-			        
-	        Fragmenter fragmenter = new Fragmenter((Vector<Peak>)spectrum.getPeakList().clone(), mzabs, mzppm, mode, true, this.sumFormulaRedundancyCheck, false, false);     
-	        List<IAtomContainer> l = null;
-	        try
-	        {
-	        	l = fragmenter.generateFragmentsInMemory(molecule, true, 2);
-	        }
-	        catch(OutOfMemoryError e)
-	        {
-	        	System.out.println("OUT OF MEMORY ERROR! " + candidateID);
-	        	continue;
-	        }
-        
-		        
-		    List<IAtomContainer> fragments = l;  
-			
+
+			Fragmenter fragmenter = new Fragmenter((Vector<Peak>)spectrum.getPeakList().clone(), mzabs, mzppm, mode, true, this.sumFormulaRedundancyCheck, false, false);     
+			List<IAtomContainer> l = null;
+			try
+			{
+				l = fragmenter.generateFragmentsInMemory(molecule, true, 2);
+			}
+			catch(OutOfMemoryError e)
+			{
+				System.out.println("OUT OF MEMORY ERROR! " + molecule.getID());
+				continue;
+			}
+
+
+			List<IAtomContainer> fragments = l;  
+
 			//get the original peak list again
 			Vector<Peak> peakListParsed = spectrum.getPeakList();
-			
-			
+
+
 			//clean up peak list
 			CleanUpPeakList cList = new CleanUpPeakList((Vector<Peak>) peakListParsed.clone());
 			Vector<Peak> cleanedPeakList = cList.getCleanedPeakList(spectrum.getExactMass());
-			
-		
+
+
 			//now find corresponding fragments to the mass
 			AssignFragmentPeak afp = new AssignFragmentPeak();
 			afp.setHydrogenTest(true);
 			afp.AssignFragmentPeak(fragments, cleanedPeakList, mzabs, mzppm, spectrum.getMode(), false);
-			
+
 			Vector<PeakMolPair> hits = afp.getHits();			
-			
-			
+
+
 			//now "real" scoring --> depends on intensities
 			Scoring score = new Scoring(spectrum.getPeakList());
 			double currentScore = score.computeScoring(afp.getHitsMZ());
-			
+
 			//save score in hashmap...if there are several hits with the same score --> vector of strings
 			if(realScoreMap.containsKey(currentScore))
-	        {
-	        	Vector<String> tempList = realScoreMap.get(currentScore);
-	        	tempList.add(candidateID);
-	        	realScoreMap.put(currentScore, tempList);
-	        }
-	        else
-	        {
-	        	Vector<String> temp = new Vector<String>();
-	        	temp.add(candidateID);
-	        	realScoreMap.put(currentScore, temp);
-	        }
-			
-			
+			{
+				Vector<String> tempList = realScoreMap.get(currentScore);
+				tempList.add(molecule.getID());
+				realScoreMap.put(currentScore, tempList);
+			}
+			else
+			{
+				Vector<String> temp = new Vector<String>();
+				temp.add(molecule.getID());
+				realScoreMap.put(currentScore, temp);
+			}
+
+
 			//save score in hashmap...if there are several hits with the same
 			//amount of identified peaks --> ArrayList
 			if(scoreMap.containsKey(hits.size()))
-	        {
-	        	ArrayList<String> tempList = scoreMap.get(hits.size());
-	        	tempList.add(candidateID);
-	        	scoreMap.put(hits.size(), tempList);
-	        }
-	        else
-	        {
-	        	ArrayList<String> temp = new ArrayList<String>();
-	        	temp.add(candidateID);
-	        	scoreMap.put(hits.size(), temp);
-	        }
-			
+			{
+				ArrayList<String> tempList = scoreMap.get(hits.size());
+				tempList.add(molecule.getID());
+				scoreMap.put(hits.size(), tempList);
+			}
+			else
+			{
+				ArrayList<String> temp = new ArrayList<String>();
+				temp.add(molecule.getID());
+				scoreMap.put(hits.size(), temp);
+			}
+
 			Vector<Double> peaks = new Vector<Double>();
 			Vector<Double> intensities = new Vector<Double>();
-			
+
 			//get all the identified peaks
 			for (int i = 0; i < hits.size(); i++) {
 				listOfPeaks.add(hits.get(i).getPeak());
@@ -338,31 +232,27 @@ public class BioClipseConvenience {
 				//xyFound.add(hits.get(i).getPeak().getMass(), hits.get(i).getPeak().getRelIntensity());
 			}
 
-			
+
 			List<IAtomContainer> hitsList = new ArrayList<IAtomContainer>();
 			for (int i = 0; i < hits.size(); i++) {
 				hitsList.add(AtomContainerManipulator.removeHydrogens(hits.get(i).getFragment()));
 				//Render.Highlight(AtomContainerManipulator.removeHydrogens(molecule), hitsList , Double.toString(hits.get(i).getPeak()));
 			}
-			
-			System.out.println(" " + candidateID + " " + afp.getHits().size() + " " + currentScore);
+
+			System.out.println(" " + molecule.getID() + " " + afp.getHits().size() + " " + currentScore);
 			//done fragments
 			count++;
-			
-			//break is enough compounds were processed
-			if(count == this.limit)
-				break;
 		}
-		
+
 		HashMap<Double, Vector<String>> scoresNormalized = normalize(realScoreMap);
 		Double[] scores = new Double[scoresNormalized.size()];
 		scores = scoresNormalized.keySet().toArray(scores);
-//		Arrays.sort(scores);
+		//		Arrays.sort(scores);
 		List<Double> result;
 		result = Arrays.asList(scores);		
 		return result;
 	}
-	
+
 	
 	/**
 	 * Normalize the score between 0 and 1.

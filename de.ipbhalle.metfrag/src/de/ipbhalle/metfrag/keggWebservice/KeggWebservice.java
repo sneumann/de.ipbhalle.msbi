@@ -54,7 +54,8 @@ public class KeggWebservice {
             }
 	    } 
 		catch (Exception e) {
-	        System.err.println(e.toString());
+	        //System.err.println(e.toString());
+			e.printStackTrace();
 	    }
 		
 		return KEGGCandidates;

@@ -1,9 +1,41 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: MetFrag
+Bundle-Name: de.ipbhalle.metfrag
 Bundle-SymbolicName: de.ipbhalle.metfrag
 Bundle-Version: 0.0.1
-Bundle-ClassPath: .
+Bundle-ClassPath: lib/jaxrpc.jar,
+ lib/axis-ant.jar,
+ lib/axis.jar,
+ lib/commons-discovery-0.2.jar,
+ lib/freehep-export-2.1.1.jar,
+ lib/freehep-graphics2d-2.1.1.jar,
+ lib/freehep-graphicsio-2.1.1.jar,
+ lib/freehep-graphicsio-emf-2.1.1.jar,
+ lib/freehep-graphicsio-java-2.1.1.jar,
+ lib/freehep-graphicsio-pdf-2.1.1.jar,
+ lib/freehep-graphicsio-ps-2.1.1.jar,
+ lib/freehep-graphicsio-svg-2.1.1.jar,
+ lib/freehep-graphicsio-swf-2.1.1.jar,
+ lib/freehep-graphicsio-tests-2.1.1.jar,
+ lib/freehep-io-2.0.2.jar,
+ lib/freehep-swing-2.0.3.jar,
+ lib/freehep-util-2.0.2.jar,
+ lib/freehep-xml-2.1.1.jar,
+ lib/iText-2.1.2u.jar,
+ lib/jai_codec.jar,
+ lib/jai_core.jar,
+ lib/jas-plotter-2.2.jar,
+ lib/jdom-1.0.jar,
+ lib/keggapi.jar,
+ lib/mlibwrapper_jai.jar,
+ lib/mysql-connector-java-3.0.17-ga-bin.jar,
+ lib/openide-lookup-1.9-patched-1.0.jar,
+ lib/saaj.jar,
+ lib/wsdl4j-1.5.1.jar,
+ .,
+ lib/activation.jar,
+ lib/mail.jar,
+ lib/commons-logging-1.0.4.jar
 Export-Package: 
  com.chemspider.www,
  de.ipbhalle.metfrag.bondPrediction,
@@ -57,5 +89,6 @@ Require-Bundle: org.openscience.cdk.data,
  org.openscience.cdk.formula,
  org.openscience.cdk.fingerprint,
  org.openscience.cdk.extra,
- org.openscience.cdk.isomorphism
+ org.openscience.cdk.isomorphism,
+ net.bioclipse.logger;bundle-version="2.2.0"
 Import-Package: javax.vecmath

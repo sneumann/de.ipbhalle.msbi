@@ -91,4 +91,5 @@ Require-Bundle: org.openscience.cdk.data,
  org.openscience.cdk.extra,
  org.openscience.cdk.isomorphism,
  net.bioclipse.logger;bundle-version="2.2.0"
-Import-Package: javax.vecmath
+Import-Package: javax.vecmath,
+ net.bioclipse.core.domain

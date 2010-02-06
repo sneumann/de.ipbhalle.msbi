@@ -118,7 +118,7 @@ public class AssignFragmentPeak {
 		boolean found = false;
 
 
-		IMolecularFormula molecularFormula = null;
+		IMolecularFormula molecularFormula = DefaultChemObjectBuilder.getInstance().newMolecularFormula();
 		molecularFormula.getBuilder().newMolecularFormula();
 		molecularFormula = MolecularFormulaManipulator.getMolecularFormula(ac, molecularFormula);
 		

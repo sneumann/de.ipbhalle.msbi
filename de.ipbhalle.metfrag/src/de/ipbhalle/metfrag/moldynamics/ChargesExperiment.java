@@ -38,8 +38,6 @@ import org.openscience.cdk.io.formats.SDFFormat;
 import org.openscience.cdk.tools.manipulator.AtomContainerManipulator;
 import org.openscience.cdk.tools.manipulator.ChemFileManipulator;
 
-import com.lowagie.text.pdf.hyphenation.TernaryTree.Iterator;
-
 //import de.ipbhalle.metfrag.tools.Render;
 
 public class ChargesExperiment {

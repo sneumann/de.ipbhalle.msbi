@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.NumberFormat;
@@ -358,22 +359,10 @@ public class Fragmenter {
     	bondEnergies = new HashMap<String, Double>();
         try 
         {
-        	String file = "";
-        	if(System.getProperty("property.file.path") != null)
-        	{
-        		file = System.getProperty("property.file.path");
-        		file += "bondenergies.txt";
-        	}
-        	else
-        	{
-        		URL url = Fragmenter.class.getClassLoader().getResource("bondenergies.txt");
-    			file = url.getFile();
-//        		System.out.println("Pfad zu bondenergies.txt: " + url.getFile());
-        	}
-        	
-        	FileInputStream fstream = new FileInputStream(new File(file));
+        	InputStream istream = this.getClass().getClassLoader().getResourceAsStream("/bondenergies.txt");
+
     	    // Get the object of DataInputStream
-    	    DataInputStream in = new DataInputStream(fstream);
+    	    DataInputStream in = new DataInputStream(istream);
     	    BufferedReader br = new BufferedReader(new InputStreamReader(in));
     	    String strLine;
     	    //Read File Line By Line
@@ -1884,21 +1873,10 @@ public class Fragmenter {
 		neutralLoss = new HashMap<Double, NeutralLoss>();
 		try 
         {	
-			String file = "";
-        	if(System.getProperty("property.file.path") != null)
-        	{
-        		file = System.getProperty("property.file.path");
-        		file += "neutralLoss.csv";
-        	}
-        	else
-        	{
-        		URL url = AssignFragmentPeak.class.getClassLoader().getResource("neutralLoss.csv");
-    			file = url.getFile();
-        		//System.out.println("Pfad: " + url.getFile());
-        	}
-        	FileInputStream fstream = new FileInputStream(new File(file));
+        	InputStream istream = this.getClass().getClassLoader().getResourceAsStream("/neutralLoss.csv");
+        	
     	    // Get the object of DataInputStream
-    	    DataInputStream in = new DataInputStream(fstream);
+    	    DataInputStream in = new DataInputStream(istream);
     	    BufferedReader br = new BufferedReader(new InputStreamReader(in));
     	    String strLine;
     	    boolean first = true;

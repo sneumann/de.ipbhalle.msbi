@@ -32,10 +32,10 @@ Bundle-ClassPath: lib/jaxrpc.jar,
  lib/openide-lookup-1.9-patched-1.0.jar,
  lib/saaj.jar,
  lib/wsdl4j-1.5.1.jar,
- .,
  lib/activation.jar,
  lib/mail.jar,
- lib/commons-logging-1.0.4.jar
+ lib/commons-logging-1.0.4.jar,
+  .
 Export-Package: 
  com.chemspider.www,
  de.ipbhalle.metfrag.bondPrediction,
@@ -54,7 +54,6 @@ Export-Package:
  de.ipbhalle.metfrag.resultsparser,
  de.ipbhalle.metfrag.scoring,
  de.ipbhalle.metfrag.similarity,
- de.ipbhalle.metfrag.tests,
  de.ipbhalle.metfrag.tools,
  gov.nih.nlm.ncbi.pubchem,
  gov.nih.nlm.ncbi.www.soap.eutils,
@@ -89,7 +88,6 @@ Require-Bundle: org.openscience.cdk.data,
  org.openscience.cdk.formula,
  org.openscience.cdk.fingerprint,
  org.openscience.cdk.extra,
- org.openscience.cdk.isomorphism,
- net.bioclipse.logger;bundle-version="2.2.0"
+ org.openscience.cdk.isomorphism
 Import-Package: javax.vecmath,
  net.bioclipse.core.domain

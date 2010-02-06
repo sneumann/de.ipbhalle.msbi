@@ -35,9 +35,6 @@ import org.openscience.cdk.io.formats.Mol2Format;
 import org.openscience.cdk.io.formats.SDFFormat;
 import org.openscience.cdk.tools.manipulator.ChemFileManipulator;
 
-import com.lowagie.text.pdf.hyphenation.TernaryTree.Iterator;
-
-
 public class BondDistance {
 
 	/**
